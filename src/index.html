@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>BManager</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ===== First-run: ask for username ===== -->
+  <div id="name-prompt" class="overlay hidden">
+    <div class="name-box">
+      <div class="brand-mark">B</div>
+      <h2>Welcome to BManager</h2>
+      <p>What should we call you?</p>
+      <input id="name-input" type="text" maxlength="30" placeholder="Your name" />
+      <button id="name-submit">Continue</button>
+    </div>
+  </div>
+
+  <!-- ===== Splash shown on every launch ===== -->
+  <div id="welcome-splash" class="overlay hidden">
+    <div class="welcome-box">
+      <div id="welcome-line1" class="welcome-line1"></div>
+      <div id="welcome-line2" class="welcome-line2"></div>
+    </div>
+  </div>
+
+  <!-- ===== APP SHELL ===== -->
+  <div id="app-shell" class="hidden">
+
+    <!-- Left toolbar -->
+    <div id="toolbar">
+      <div id="toolbar-logo">B</div>
+      <div class="toolbar-spacer"></div>
+      <div class="toolbar-buttons">
+        <button class="tool-btn" id="btn-home" data-tip="Home">
+          <svg viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9"/></svg>
+        </button>
+        <button class="tool-btn" id="btn-favorites" data-tip="Favorites">
+          <svg viewBox="0 0 24 24"><path d="M12 3.5 14.6 9l6 .9-4.3 4.2 1 6-5.3-2.8L6.7 20.1l1-6L3.4 9.9l6-.9Z"/></svg>
+        </button>
+        <button class="tool-btn" id="btn-terminal" data-tip="Terminal">
+          <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="m7 9 3 3-3 3"/><path d="M13 15h4"/></svg>
+        </button>
+        <button class="tool-btn" id="btn-settings" data-tip="Settings">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"/></svg>
+        </button>
+        <button class="tool-btn" id="btn-music" data-tip="Music">
+          <svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+        </button>
+        <button class="tool-btn" id="btn-profile" data-tip="Profile">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>
+        </button>
+      </div>
+      <div class="toolbar-spacer"></div>
+    </div>
+
+    <!-- Main content -->
+    <div id="main-area">
+      <div class="app-bg-layer">
+        <img class="app-bg-image" id="app-bg-image" alt="" />
+        <div class="app-bg-tint" id="app-bg-tint"></div>
+      </div>
+      <div id="content-watermark" class="content-watermark"><span class="content-watermark-text">✦_BachPremium ✦</span></div>
+
+      <!-- ---- HUB: folder list ---- -->
+      <div id="view-hub" class="view">
+        <div class="view-header"><h2>Bot Folders</h2></div>
+        <div id="hub-empty-hint" class="hint hidden">Right-click anywhere here to add a folder.</div>
+        <div id="folder-grid" class="folder-grid"></div>
+      </div>
+
+      <!-- ---- FAVORITES: starred .js files across all folders ---- -->
+      <div id="view-favorites" class="view hidden">
+        <div class="view-header"><h2>Favorites</h2></div>
+        <div id="favorites-empty-hint" class="hint hidden">No favorites yet. Star a bot from inside its folder to pin it here.</div>
+        <div id="favorites-grid" class="file-grid"></div>
+      </div>
+
+      <!-- ---- PROFILE ---- -->
+      <div id="view-profile" class="view hidden">
+        <div class="view-header"><h2>Profile</h2></div>
+        <div class="profile-card">
+          <span id="profile-username" class="profile-username-text">User</span>
+          <div class="profile-uptime-row">
+            <span class="profile-uptime-label">Session uptime</span>
+            <span id="profile-uptime" class="profile-uptime-text">0d 00:00:00</span>
+          </div>
+        </div>
+        <div class="profile-running-section">
+          <h3>Running bots</h3>
+          <div id="profile-running-empty" class="hint hidden">No bots are running right now.</div>
+          <div id="profile-running-list" class="profile-running-list"></div>
+        </div>
+      </div>
+
+      <!-- ---- FILES: .js files inside one folder ---- -->
+      <div id="view-files" class="view hidden">
+        <div class="view-header">
+          <button class="back-btn" id="files-back-btn">
+            <svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg> Back
+          </button>
+          <h2 id="files-title">Folder</h2>
+          <button class="primary-btn small" id="add-file-btn">
+            <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg> Add file
+          </button>
+        </div>
+        <div id="file-grid" class="file-grid"></div>
+      </div>
+
+      <!-- ---- TERMINAL: tabs + output + input ---- -->
+      <div id="view-terminal" class="view hidden">
+        <div class="terminal-panel">
+          <div id="terminal-tabs" class="terminal-tabs"></div>
+          <div class="terminal-body">
+            <div class="terminal-toolbar">
+              <span id="terminal-active-name">No process selected</span>
+              <span class="terminal-watermark">✦_BachPremium ✦</span>
+              <div class="terminal-toolbar-actions">
+                <button id="terminal-stop-btn" class="danger-btn small">
+                  <svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/></svg> Stop
+                </button>
+                <button id="terminal-clear-btn" class="ghost-btn small" title="Stop, clear the log, then restart the bot">
+                  <svg viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"/><path d="M19 6l-1 14a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1L5 6"/></svg> Clear
+                </button>
+                <button id="terminal-run-btn" class="success-btn small" title="Run the bot again">
+                  <svg viewBox="0 0 24 24"><path d="M6 4v16l14-8Z"/></svg> Run
+                </button>
+              </div>
+            </div>
+            <pre id="terminal-output" class="terminal-output"></pre>
+            <div class="terminal-input-row">
+              <input type="text" id="terminal-input" placeholder="Send input to the running process..." />
+              <button id="terminal-send-btn">
+                <svg viewBox="0 0 24 24"><path d="M22 2 11 13"/><path d="m22 2-7 20-4-9-9-4Z"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ---- SETTINGS ---- -->
+      <div id="view-settings" class="view hidden">
+        <div class="view-header"><h2>Settings</h2></div>
+        <div class="settings-form">
+          <label>
+            Cards per row (3 - 10)
+            <input type="number" id="setting-cards-per-row" min="3" max="10" />
+          </label>
+          <label>
+            App background
+            <div class="bg-settings">
+              <div id="bg-preview" class="bg-preview">
+                <span class="bg-preview-label">BManager</span>
+                <div id="bg-position-dot" class="bg-position-dot"></div>
+                <span class="bg-position-hint">Drag to choose region</span>
+              </div>
+              <div id="bg-color-row" class="bg-color-row"></div>
+              <div id="bg-angle-row" class="bg-angle-row hidden">
+                <span>Angle</span>
+                <input type="range" id="bg-gradient-angle" min="0" max="360" value="135" />
+                <span id="bg-angle-value">135°</span>
+              </div>
+              <div id="bg-zoom-row" class="bg-angle-row hidden">
+                <span>Zoom</span>
+                <input type="range" id="bg-zoom" min="100" max="250" value="100" />
+                <span id="bg-zoom-value">100%</span>
+              </div>
+              <div class="appearance-row">
+                <span>Image</span>
+                <div class="image-controls">
+                  <input type="file" id="bg-image-input" accept="image/*" class="hidden" />
+                  <button id="bg-image-btn" class="ghost-btn small" type="button">Choose image</button>
+                  <button id="bg-image-clear" class="ghost-btn small" type="button">Remove</button>
+                </div>
+              </div>
+            </div>
+          </label>
+          <label class="sound-toggle-label">
+            <input type="checkbox" id="setting-sound-enabled" />
+            Play a sound when pressing buttons
+          </label>
+          <button id="setting-save-btn" class="primary-btn">Save changes</button>
+          <div id="setting-saved-msg" class="saved-msg hidden">Saved</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===== Music player modal ===== -->
+  <div id="music-modal" class="overlay hidden">
+    <div class="music-box" id="music-box">
+      <img class="music-bg-layer" id="music-bg-layer" alt="" />
+      <div class="music-bg-tint" id="music-bg-tint"></div>
+
+      <button class="music-appearance-toggle" id="music-appearance-toggle" title="Customize appearance" type="button">
+        <svg viewBox="0 0 24 24"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor" stroke="none"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor" stroke="none"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor" stroke="none"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor" stroke="none"/><path d="M12 22a10 10 0 1 1 0-20 10 10 0 0 1 9.5 7c.4 1.3-.6 2.5-2 2.5h-4a2.5 2.5 0 0 0 0 5c1 0 1 1.5 0 2-1.2.5-2.3.5-3.5.5Z"/></svg>
+      </button>
+
+      <div id="music-appearance-panel" class="music-appearance-panel hidden">
+        <div class="appearance-row">
+          <span>Color</span>
+          <div id="music-bg-color-row" class="bg-color-row small"></div>
+        </div>
+        <div class="appearance-row">
+          <span>Image</span>
+          <div class="image-controls">
+            <input type="file" id="music-bg-image-input" accept="image/*" class="hidden" />
+            <button id="music-bg-image-btn" class="ghost-btn small" type="button">Choose image</button>
+            <button id="music-bg-image-clear" class="ghost-btn small" type="button">Remove</button>
+          </div>
+        </div>
+        <div id="music-bg-position-row" class="appearance-row hidden" style="align-items:flex-start;">
+          <span>Region</span>
+          <div style="flex:1;">
+            <div id="music-bg-position-pad" class="bg-position-pad" title="Drag to choose which part of the image shows">
+              <div id="music-bg-position-dot" class="bg-position-dot visible"></div>
+            </div>
+          </div>
+        </div>
+        <div id="music-bg-zoom-row" class="bg-angle-row hidden">
+          <span>Zoom</span>
+          <input type="range" id="music-bg-zoom" min="100" max="250" value="100" />
+          <span id="music-bg-zoom-value">100%</span>
+        </div>
+      </div>
+
+      <input type="file" id="music-file-input" accept="audio/*" class="hidden" />
+      <button id="music-choose-btn" class="music-choose-btn" type="button">Choose music file</button>
+
+      <audio id="music-audio" loop></audio>
+
+      <div class="music-progress-row">
+        <span id="music-current-time" class="music-time">00:00</span>
+        <div id="music-progress-track" class="music-progress-track">
+          <div id="music-progress-fill" class="music-progress-fill"></div>
+          <div id="music-progress-thumb" class="music-progress-thumb"></div>
+        </div>
+        <span id="music-remaining-time" class="music-time">-00:00</span>
+      </div>
+
+      <div class="music-transport-row">
+        <button id="music-rewind-btn" class="transport-btn" title="Back 10s" type="button" disabled>
+          <svg viewBox="0 0 24 24"><path d="M11 5 3 12l8 7V5Z"/><path d="M21 5l-8 7 8 7V5Z"/></svg>
+        </button>
+        <button id="music-play-btn" class="transport-btn transport-btn-main" title="Play / Pause" type="button" disabled>
+          <svg viewBox="0 0 24 24"><path d="M6 4v16l14-8Z"/></svg>
+        </button>
+        <button id="music-forward-btn" class="transport-btn" title="Forward 10s" type="button" disabled>
+          <svg viewBox="0 0 24 24"><path d="M13 5v14l8-7-8-7Z"/><path d="M3 5v14l8-7-8-7Z"/></svg>
+        </button>
+      </div>
+
+      <button id="music-close-btn" class="path-row-btn" type="button">Close</button>
+    </div>
+  </div>
+
+  <!-- ===== CONTEXT MENUS ===== -->
+  <div id="ctx-hub" class="context-menu hidden">
+    <div class="ctx-item" data-action="add-folder">Add folder</div>
+    <div class="ctx-item" data-action="open-settings">Settings</div>
+  </div>
+
+  <!-- ===== Mini modal (used for delete confirm only now) ===== -->
+  <div id="mini-modal" class="overlay hidden">
+    <div class="mini-modal-box">
+      <h3 id="mini-modal-title">Title</h3>
+      <input id="mini-modal-input" type="text" maxlength="200" />
+      <div class="mini-modal-actions">
+        <button id="mini-modal-cancel">Cancel</button>
+        <button id="mini-modal-ok">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="renderer.js"></script>
+</body>
+</html>
